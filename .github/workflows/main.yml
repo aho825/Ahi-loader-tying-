@@ -31,7 +31,7 @@ jobs:
         run: |
           expect -c "
           set timeout -1
-          spawn buildozer android debug
+          spawn buildozer -v android debug
           expect {
               \"Accept? (y/N):\" { send \"y\r\"; exp_continue }
               \"Accept?\" { send \"y\r\"; exp_continue }
@@ -39,10 +39,10 @@ jobs:
           }
           "
 
-      - name: Locate and Copy APK
+      - name: Find APK Everywhere
         run: |
           mkdir -p final_apk
-          find . -name "*.apk" -exec cp {} final_apk/ \; || true
+          find . -name "*.apk" -exec cp -v {} final_apk/ \; || true
           ls -la final_apk/
 
       - name: Upload APK
@@ -50,4 +50,5 @@ jobs:
         with:
           name: app-debug
           path: final_apk/
+          if-no-files-warn-ignore: true
           
