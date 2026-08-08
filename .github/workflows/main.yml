@@ -31,8 +31,7 @@ jobs:
         run: |
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses 2>/dev/null || true
-          yes | $ANDROID_HOME/tools/bin/sdkmanager --licenses 2>/dev/null || true
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
 
       - name: Build with Buildozer
         run: |
@@ -42,14 +41,10 @@ jobs:
         run: |
           mkdir -p final_apk
           cp -v bin/*.apk final_apk/ 2>/dev/null || find . -name "*.apk" -exec cp -v {} final_apk/ \; || true
-          echo "Bulunan APK dosyaları:"
-          ls -la final_apk/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: final_apk/
-          
           path: final_apk/
           
