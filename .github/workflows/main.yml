@@ -29,15 +29,7 @@ jobs:
 
       - name: Build with Buildozer
         run: |
-          expect -c "
-          set timeout -1
-          spawn buildozer -v android debug
-          expect {
-              \"Accept? (y/N):\" { send \"y\r\"; exp_continue }
-              \"Accept?\" { send \"y\r\"; exp_continue }
-              eof
-          }
-          "
+          buildozer -v android debug || { echo "--- HATA DETAYI (SON 50 SATIR) ---"; tail -n 50 ~/.buildozer/android/platform/build-*/build/other_builds/hostpython3/desktop/hostpython3/buildozer.log 2>/dev/null || true; exit 1; }
 
       - name: Copy and Locate APK
         run: |
