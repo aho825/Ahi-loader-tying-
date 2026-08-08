@@ -31,14 +31,21 @@ jobs:
         run: |
           mkdir -p ~/.android
           touch ~/.android/repositories.cfg
-          # Buildozer'ın SDK yolunu önceden hazırlayıp build-tools kuruyoruz
           mkdir -p ~/.buildozer/android/platform/
           yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33" "platform-tools"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "build-tools;33.0.2" "platforms;android-33" "platform-tools" "cmdline-tools;latest"
+          sleep 10
+          ls -la $ANDROID_HOME/build-tools/ || echo "Build tools directory not found"
+
+      - name: Configure Buildozer
+        run: |
+          mkdir -p ~/.buildozer/android/platform/build-tools/33.0.2
+          export ANDROID_SDK_ROOT=$ANDROID_HOME
+          export PATH=$ANDROID_HOME/build-tools/33.0.2:$PATH
 
       - name: Build with Buildozer
         run: |
-          buildozer -v android debug
+          buildozer -v android debug --p4a.accept_sdk_license=True
 
       - name: Prepare APK for Artifact
         run: |
