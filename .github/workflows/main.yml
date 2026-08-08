@@ -17,19 +17,24 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install System Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev
-          pip install --upgrade buildozer cython==0.29.33
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev ccache libssl-dev
+
+      - name: Install Python Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install buildozer cython==0.29.33
 
       - name: Build with Buildozer
         run: |
-          yes | buildozer -v android debug
+          buildozer --warn_on_root 1 android debug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: bin/*.apk
+          
           
