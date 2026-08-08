@@ -39,20 +39,15 @@ jobs:
           }
           "
 
-      - name: Check Build Output
+      - name: Copy and Locate APK
         run: |
-          echo "--- BIN KKLASORU ---"
-          ls -la bin/ || echo "bin klasoru yok"
-          echo "--- TUM DOSYALAR ---"
-          find . -name "*.apk"
           mkdir -p final_apk
-          cp -v bin/*.apk final_apk/ 2>/dev/null || find . -name "*.apk" -exec cp -v {} final_apk/ \; || true
+          find . -name "*.apk" -exec cp -v {} final_apk/ \;
+          ls -la final_apk/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: final_apk/
-          if-no-files-found: ignore
-          
           
