@@ -39,11 +39,15 @@ jobs:
           }
           "
 
+      - name: Find and Copy APK
+        run: |
+          mkdir -p final_apk
+          find . -name "*.apk" -exec cp {} final_apk/ \;
+          ls -la final_apk/
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: |
-            bin/*.apk
-            *.apk
-            
+          path: final_apk/
+          
