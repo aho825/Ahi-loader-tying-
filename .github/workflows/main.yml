@@ -50,5 +50,5 @@ jobs:
         with:
           name: app-debug
           path: final_apk/
-          if-no-files-warn-ignore: true
+          if-no-files-found: ignore
           
