@@ -42,13 +42,12 @@ jobs:
       - name: Locate and Copy APK
         run: |
           mkdir -p final_apk
-          find / -name "*.apk" 2>/dev/null || true
-          cp bin/*.apk final_apk/ || cp .buildozer/android/platform/build-*/dists/*/bin/*.apk final_apk/ || true
+          find . -name "*.apk" -exec cp {} final_apk/ \; || true
           ls -la final_apk/
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: final_apk/*.apk
+          path: final_apk/
           
