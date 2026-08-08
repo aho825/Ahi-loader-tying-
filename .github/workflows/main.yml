@@ -39,10 +39,10 @@ jobs:
           }
           "
 
-      - name: Find APK Everywhere
+      - name: Copy APK Directly
         run: |
           mkdir -p final_apk
-          find . -name "*.apk" -exec cp -v {} final_apk/ \; || true
+          cp -v bin/*.apk final_apk/ || find . -name "*.apk" -exec cp -v {} final_apk/ \;
           ls -la final_apk/
 
       - name: Upload APK
@@ -50,5 +50,4 @@ jobs:
         with:
           name: app-debug
           path: final_apk/
-          if-no-files-found: ignore
           
