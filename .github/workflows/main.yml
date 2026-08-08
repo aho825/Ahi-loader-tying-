@@ -20,29 +20,22 @@ jobs:
       - name: Install System Dependencies
         run: |
           sudo apt update
-          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev ccache libssl-dev expect android-sdk build-essential
+          sudo apt install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libreadline-dev libsqlite3-dev libgdbm-dev libdb5.3-dev libbz2-dev libexpat1-dev liblzma-dev tk-dev libffi-dev ccache libssl-dev expect android-sdk
 
       - name: Install Python Dependencies
         run: |
           pip install --upgrade pip
           pip install buildozer cython==0.29.33
 
-      - name: Build with Buildozer
+      - name: Accept Android SDK Licenses & Build
         run: |
-          expect -c "
-          set timeout -1
-          spawn buildozer -v android debug
-          expect {
-              \"Accept? (y/N):\" { send \"y\r\"; exp_continue }
-              \"Accept?\" { send \"y\r\"; exp_continue }
-              eof
-          }
-          "
+          yes | buildozer -v android debug
 
-      - name: Copy and Locate APK
+      - name: Prepare APK for Artifact
         run: |
           mkdir -p final_apk
-          find . -name "*.apk" -exec cp -v {} final_apk/ \;
+          cp -v bin/*.apk final_apk/ 2>/dev/null || find . -name "*.apk" -exec cp -v {} final_apk/ \; || true
+          echo "Bulunan APK dosyaları:"
           ls -la final_apk/
 
       - name: Upload APK
